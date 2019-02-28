@@ -44,26 +44,26 @@ All required parameters will be initialized by common valid default values and c
   default = 1000 ms
 - **void setDblClick(uint16_t dblclick);**
   define the minimal time between to clicks to detect a double click
-  default = 500 ms
-- **void registerOnTouchDown(void (*callback)(TS_Point p));**
+  default = 500 ms 
+- **void registerOnTouchDown(void (\*callback)(TS_Point p));**
   register a callback function for touch start event
   void onEvent(TS_Point position)
-- **void registerOnTouchUp(void (*callback)(TS_Point p));**
+- **void registerOnTouchUp(void (\*callback)(TS_Point p));**
   register a callback function for touch en event
   void onEvent(TS_Point position)
-- **void registerOnTouchClick(void (*callback)(TS_Point p));**
+- **void registerOnTouchClick(void (\*callback)(TS_Point p));**
   register a callback function for touch click event
   void onEvent(TS_Point position)
-- **void registerOnTouchDblClick(void (*callback)(TS_Point p));**
+- **void registerOnTouchDblClick(void (\*callback)(TS_Point p));**
   register a callback function for touch double click event
   void onEvent(TS_Point position)
-- **void registerOnTouchLong(void (*callback)(TS_Point p));**
+- **void registerOnTouchLong(void (\*callback)(TS_Point p));**
   register a callback function for touch long click event
   void onEvent(TS_Point position)
-- **void registerOnTouchDraw(void (*callback)(TS_Point p));**
+- **void registerOnTouchDraw(void (\*callback)(TS_Point p));**
   register a callback function for touch draw event
   void onEvent(TS_Point position)
-- **void registerOnTouchSwipe(void (*callback)(uint8_t direction));**
+- **void registerOnTouchSwipe(void (\*callback)(uint8_t direction));**
   register a callback function for touch swipe event
   direction 0 = right to left 1 = left to right
   2 = bottom to top 3 = top to bottom
