@@ -62,10 +62,10 @@ void onSwipe(uint8_t dir) {
 
 void onClick(TS_Point p) {
   if (scr > 0) { //on any screen except 0 show the click position
-    draw_screen(scr);
     tft.setFont(&FreeSans9pt7b);
+    tft.fillRect(0,40,240,70,ILI9341_WHITE);
     tft.setTextColor(ILI9341_BLACK,ILI9341_WHITE);
-    tft.setCursor(30,30);
+    tft.setCursor(10,60);
     tft.println("Clicked");
     tft.println(p.x);
     tft.println(p.y);
@@ -74,10 +74,10 @@ void onClick(TS_Point p) {
 
 void onDblClick(TS_Point p) {
   if (scr > 0) { //on any screen except 0 show double click position
-    draw_screen(scr);
+    tft.fillRect(0,40,240,70,ILI9341_WHITE);
     tft.setFont(&FreeSans9pt7b);
     tft.setTextColor(ILI9341_BLACK,ILI9341_WHITE);
-    tft.setCursor(30,30);
+    tft.setCursor(10,60);
     tft.println("Doubleclick");
     tft.println(p.x);
     tft.println(p.y);
@@ -103,10 +103,10 @@ void onUntouch(TS_Point p) {
 
 void onLongClick(TS_Point p) {
   if (scr > 0) { //on any screen except 0 show double click position
-    draw_screen(scr);
     tft.setFont(&FreeSans9pt7b);
+    tft.fillRect(0,40,240,70,ILI9341_WHITE);
     tft.setTextColor(ILI9341_BLACK,ILI9341_WHITE);
-    tft.setCursor(30,30);
+    tft.setCursor(10,60);
     tft.println("Long Click");
     tft.println(p.x);
     tft.println(p.y);
@@ -124,7 +124,7 @@ void setup() {
   Serial.print("tftx ="); Serial.print(tft.width()); Serial.print(" tfty ="); Serial.println(tft.height());
   //init TouchEvent instance
   tevent.setResolution(tft.width(),tft.height());
-  tevent.setDblClick(200);
+  tevent.setDblClick(300);
   tevent.registerOnTouchSwipe(onSwipe);
   tevent.registerOnTouchClick(onClick);
   tevent.registerOnTouchDblClick(onDblClick);
@@ -139,6 +139,12 @@ void setup() {
 //fill screen with different colors for different screen numbers
 void draw_screen(uint8_t nr) {
   tft.fillScreen(bg[nr]);
+  tft.setFont(&FreeSans9pt7b);
+  tft.setTextColor(ILI9341_BLACK,ILI9341_WHITE);
+  tft.setCursor(10,20);
+  tft.print("Screen Nr. ");
+  tft.print(nr);
+  
 }
 
 void loop() {
