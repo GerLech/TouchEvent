@@ -1,0 +1,47 @@
+#######################################
+# Syntax Coloring Map For Ultrasound
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+TouchEvent	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+pollTouchScreen	        KEYWORD2
+setResolution	          KEYWORD2
+setDrawMode	            KEYWORD2
+calibrate	              KEYWORD2
+setMoveTreshold	        KEYWORD2
+setSwipe	              KEYWORD2
+setLongClick	          KEYWORD2
+setDblClick	            KEYWORD2
+registerOnTouchDown	    KEYWORD2
+registerOnTouchUp	      KEYWORD2
+registerOnTouchClick	  KEYWORD2
+registerOnTouchDblClick	KEYWORD2
+registerOnTouchLong	    KEYWORD2
+registerOnTouchDraw     KEYWORD2
+registerOnTouchSwipe    KEYWORD2
+isInArea                KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+MOVETRESHOLD  LITERAL1
+SWIPEX        LITERAL1
+SWIPEY        LITERAL1
+CLICKLONG     LITERAL1
+DOUBLECLICK   LITERAL1
+SCREENX       LITERAL1
+SCREENY       LITERAL1
+MINPRESSURE   LITERAL1
+TS_MINX       LITERAL1
+TS_MAXX       LITERAL1
+TS_MINY       LITERAL1
+TS_MAXY       LITERAL1
