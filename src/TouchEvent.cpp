@@ -26,6 +26,7 @@ void TouchEvent::pollTouchScreen() {
     }
     if (((millis() - _begin) > _clickLong) && (!_long)) {
       if (_onTouchLong) _onTouchLong(toScreen(p));
+      _long = true;
     }
   } else if (tch && !_down) { //start of touch
     _start = p; _last = p; _begin = millis(); _long = false;
@@ -33,6 +34,7 @@ void TouchEvent::pollTouchScreen() {
     if (_onTouchDown) _onTouchDown(toScreen(p));
   } else if (!tch && _down) { //Berührung endet
     _down = tch;
+    _long = false;
     if (_onTouchUp) _onTouchUp(toScreen(p));
     if (!_drawMode && ((abs(_start.x - p.x) > _swipeX) || (abs(_start.y - p.y) > _swipeY))) {
       if (_onTouchSwipe) _onTouchSwipe(swipeDirection(_start,p));
