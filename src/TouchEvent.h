@@ -51,6 +51,16 @@
 #define TS_MAXY 3900 //maximal y return value
 
 
+enum class EV : uint8_t {
+  EVT_UP    = 0,
+  EVT_DOWN  = 1,
+  EVT_CLICK = 2,
+  EVT_LONG  = 3,
+  EVT_SWIPE = 4,
+  EVT_DRAW = 5,
+  EVT_DBLCLICK = 6,
+};
+
 
 //typedef std::function<void(TS_Point point)> TE_TouchEvent;
 //typedef std::function<void(uint8_t direction)> TE_SwipeEvent;
@@ -108,9 +118,17 @@ public:
   //2 = bottom to top 3 = top to bottom
   //void onEvent(uint8_t direction)
   void registerOnTouchSwipe(void (*callback)(uint8_t direction));
+  //register a callback on any event.
+  //void onAllEvents(int16_t x, int16_t y, EV event)
+  void registerOnAllEvents(void (*callback)(int16_t x,int16_t y,EV event));
   //function to detect if a position is inside a rectangle
   //this is useful to detect if a click hit a button
   boolean isInArea(TS_Point p, int16_t x1, int16_t y1, int16_t x2, int16_t y2);
+  //function to automatic set min and max values
+  //which: none = 0, xmin = 1, ymin = 2, xmax = 3, ymax = 4
+  void autocalibrate(uint8_t which);
+  //read the min and max raw values
+  void getMinMax(uint16_t * xmin, uint16_t * ymin, uint16_t * xmax, uint16_t * ymax);
 
 
 private:
@@ -136,6 +154,7 @@ private:
   uint16_t _tsMinY = TS_MINY; //minimal y return value
   uint16_t _tsMaxX = TS_MAXX;  //maximal x return value
   uint16_t _tsMaxY = TS_MAXY; //maximal y return value
+  uint8_t _autoWhich;
 
   void(*_onTouchDown)(TS_Point p) = NULL;
   void(*_onTouchUp)(TS_Point p) = NULL;
@@ -144,6 +163,7 @@ private:
   void(*_onTouchClick)(TS_Point p) = NULL;
   void(*_onTouchDblClick)(TS_Point p) = NULL;
   void(*_onTouchSwipe)(uint8_t direction) = NULL;
+  void(*_onAllEvents)(int16_t x,int16_t y,EV event) = NULL;
 
   //convert raw position into screen coordinates
   TS_Point toScreen(TS_Point p);

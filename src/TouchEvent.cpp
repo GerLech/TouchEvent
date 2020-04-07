@@ -12,40 +12,57 @@
 TouchEvent::TouchEvent(XPT2046_Touchscreen& touch): _touch(touch) {
 }
 void TouchEvent::pollTouchScreen() {
-  TS_Point p;
+  TS_Point p,scr;
   boolean tch;
   int16_t xr,yr,dx,dy;
   //first we get position and check if touched
   p=_touch.getPoint();
+  scr = toScreen(p);
   tch = (p.z > _minPress);
   if (tch && _down) { //continous touch
     dx = abs(_last.x-p.x); dy = abs(_last.y-p.y);
     _last = p;
     if (_drawMode && ((dx > _moveth) || (dy > _moveth))) { //movement?
-      if (_onTouchDraw) _onTouchDraw(toScreen(p));
+      if (_onTouchDraw) _onTouchDraw(scr);
+      if (_onAllEvents) _onAllEvents(scr.x,scr.y,EV::EVT_DRAW);
     }
     if (((millis() - _begin) > _clickLong) && (!_long)) {
-      if (_onTouchLong) _onTouchLong(toScreen(p));
+      if (_onTouchLong) _onTouchLong(scr);
+      if (_onAllEvents) _onAllEvents(scr.x,scr.y,EV::EVT_LONG);
       _long = true;
     }
   } else if (tch && !_down) { //start of touch
     _start = p; _last = p; _begin = millis(); _long = false;
     _down = tch;
-    if (_onTouchDown) _onTouchDown(toScreen(p));
+    if (_onTouchDown) _onTouchDown(scr);
+    if (_onAllEvents) _onAllEvents(scr.x,scr.y,EV::EVT_DOWN);
   } else if (!tch && _down) { //Berührung endet
     _down = tch;
     _long = false;
-    if (_onTouchUp) _onTouchUp(toScreen(p));
+    if (_onTouchUp) _onTouchUp(scr);
+    if (_onAllEvents) _onAllEvents(scr.x,scr.y,EV::EVT_UP);
     if (!_drawMode && ((abs(_start.x - p.x) > _swipeX) || (abs(_start.y - p.y) > _swipeY))) {
       if (_onTouchSwipe) _onTouchSwipe(swipeDirection(_start,p));
     } else {
       if ((millis()-_begin) < _clickLong) {
         if ((millis()-_lastClick) < _dblClick) {
           _lastClick = 0;
-          if (_onTouchDblClick) _onTouchDblClick(toScreen(p));
+          if (_onTouchDblClick) _onTouchDblClick(scr);
+          if (_onAllEvents) _onAllEvents(scr.x,scr.y,EV::EVT_DBLCLICK);
         } else {
           _lastClick=millis();
-          if (_onTouchClick) _onTouchClick(toScreen(p));
+          if (_autoWhich > 0) {
+            switch (_autoWhich) {
+              case 1: _tsMinX = p.x; break;
+              case 2: _tsMinY = p.y; break;
+              case 3: _tsMaxX = p.x; break;
+              case 4: _tsMaxY = p.y; break;
+            }
+            _autoWhich = 0;
+            Serial.printf("x %i y%i level %i\n",p.x,p.y,_autoWhich);
+          }
+          if (_onTouchClick) _onTouchClick(scr);
+          if (_onAllEvents) _onAllEvents(scr.x,scr.y,EV::EVT_CLICK);
         }
       }
 
@@ -110,6 +127,10 @@ void TouchEvent::registerOnTouchSwipe(void (*callback)(uint8_t direction)) {
   _onTouchSwipe = callback;
 }
 
+void TouchEvent::registerOnAllEvents(void (*callback)(int16_t x,int16_t y,EV event)) {
+  _onAllEvents = callback;
+}
+
 boolean TouchEvent::isInArea(TS_Point p, int16_t x1, int16_t y1, int16_t x2, int16_t y2) {
   int16_t tmp;
   if (x1 > x2) {
@@ -165,4 +186,17 @@ TS_Point TouchEvent::toScreen(TS_Point p) {
     }
   }
   return p1;
+}
+
+//function to automatic set min and max values
+//which: none = 0, xmin = 1, ymin = 2, xmax = 3, ymax = 4
+void TouchEvent::autocalibrate(uint8_t which) {
+  _autoWhich = which;
+}
+//read the min and max raw values
+void TouchEvent::getMinMax(uint16_t * xmin, uint16_t * ymin, uint16_t * xmax, uint16_t * ymax) {
+  *xmin = _tsMinX;
+  *ymin = _tsMinY;
+  *xmax = _tsMaxX;
+  *ymax = _tsMaxY;
 }
